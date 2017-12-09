@@ -8,8 +8,7 @@
 #define YATP_TEST_THREAD_POOL_H
 
 
-#include "ThreadPool.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 
 namespace yatp
@@ -19,9 +18,6 @@ namespace yatp
     {
 
     protected:
-
-      TestThreadPool();
-      virtual ~TestThreadPool();
 
       virtual void SetUp();
       virtual void TearDown();

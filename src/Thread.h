@@ -25,20 +25,22 @@ namespace yatp
 
     public:
 
-        Thread(unsigned id, QObject *parent = nullptr);
+        Thread(unsigned id = 0, QObject *parent = nullptr);
         virtual ~Thread();
 
-        virtual bool run();
-        virtual bool stop();
-        virtual bool isRunning() const;
         virtual unsigned id() const;
+
+        virtual bool start();
+        virtual bool stop();
+        virtual bool isStarted() const;
 
         virtual Thread &operator <<(const QSharedPointer<IRunnable> &runnable);
         virtual unsigned load() const;
 
-    private slots:
+    signals:
 
         void threadStarted();
+        void threadStopped();
 
     private:
 

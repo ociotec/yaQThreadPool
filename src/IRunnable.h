@@ -8,7 +8,10 @@
 #define YATP_I_RUNNABLE_H
 
 
-#include <QObject>
+#include <QList>
+
+
+class QObject;
 
 
 namespace yatp
@@ -19,10 +22,9 @@ namespace yatp
 
     public:
 
-        virtual ~IRunnable() = default;
+        virtual ~IRunnable() { }
 
-        virtual void run() = 0;
-        virtual QList<QSharedPointer<QObject>> objects() = 0;
+        virtual QList<QObject *> objects() = 0;
         virtual unsigned load() const = 0;
 
     };

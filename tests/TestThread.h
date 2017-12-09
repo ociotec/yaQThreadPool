@@ -8,7 +8,7 @@
 #define YATP_TEST_THREAD_H
 
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 
 namespace yatp
@@ -18,9 +18,6 @@ namespace yatp
     {
 
     protected:
-
-      TestThread();
-      virtual ~TestThread();
 
       virtual void SetUp();
       virtual void TearDown();

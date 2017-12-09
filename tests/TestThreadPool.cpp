@@ -11,14 +11,6 @@
 namespace yatp
 {
 
-    TestThreadPool::TestThreadPool()
-    {
-    }
-
-    TestThreadPool::~TestThreadPool()
-    {
-    }
-
     void TestThreadPool::SetUp()
     {
     }

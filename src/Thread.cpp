@@ -18,28 +18,44 @@ namespace yatp
         _id(id),
         _runnablesMutex(QMutex::Recursive)
     {
+        moveToThread(&_thread);
+        connect(&_thread, &QThread::started, [this]()
+        {
+            qInfo().noquote() << "Thread" << *this << "has started";
+            emit threadStarted();
+        });
+        connect(&_thread, &QThread::finished, [this]()
+        {
+            qInfo().noquote() << "Thread" << *this << "has stopped";
+            emit threadStopped();
+        });
     }
 
     Thread::~Thread()
     {
-        if (isRunning())
+        if (isStarted())
         {
             stop();
         }
     }
 
-    bool Thread::run()
+    unsigned Thread::id() const
+    {
+        return _id;
+    }
+
+    bool Thread::start()
     {
         bool ok = false;
 
-        this->moveToThread(&_thread);
-        if (isRunning())
+        if (isStarted())
         {
-            qCritical().noquote() << "Thread" << *this << "is already running";
+            qCritical().noquote() << "Thread" << *this << "is already started";
         }
         else
         {
             _thread.start();
+            ok = true;
         }
 
         return ok;
@@ -49,7 +65,7 @@ namespace yatp
     {
         bool ok = false;
 
-        if (not isRunning())
+        if (not isStarted())
         {
             qCritical().noquote() << "Thread" << *this << "is not running";
         }
@@ -57,20 +73,16 @@ namespace yatp
         {
             _thread.quit();
             _thread.wait();
+            emit threadStopped();
             ok = true;
         }
 
         return ok;
     }
 
-    bool Thread::isRunning() const
+    bool Thread::isStarted() const
     {
         return _thread.isRunning();
-    }
-
-    unsigned Thread::id() const
-    {
-        return _id;
     }
 
     Thread &Thread::operator <<(const QSharedPointer<IRunnable> &runnable)
@@ -80,7 +92,7 @@ namespace yatp
             QMutexLocker lock(&_runnablesMutex);
             for (auto object : runnable->objects())
             {
-                if (object)
+                if (nullptr != object)
                 {
                     object->moveToThread(&_thread);
                 }
@@ -102,11 +114,6 @@ namespace yatp
             }
         }
         return loadsSum;
-    }
-
-    void Thread::threadStarted()
-    {
-        qInfo().noquote() << "Thread" << *this << "has started";
     }
 
 }
