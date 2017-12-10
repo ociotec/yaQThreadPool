@@ -119,7 +119,7 @@ namespace yatp
 }
 
 
-QDebug operator <<(QDebug debug, const yatp::Thread::Thread &thread)
+QDebug operator <<(QDebug debug, const yatp::Thread &thread)
 {
     QDebugStateSaver debugStateSaver(debug);
     debug.noquote().nospace() << "#" << thread.id();
