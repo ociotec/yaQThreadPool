@@ -2,7 +2,7 @@
 
 Yet another Qt thread pool.
 
-## Purpose
+## Purpose
 
 This is a Qt library to extend Qt capabilities about threads pool.
 
@@ -20,9 +20,9 @@ You can build your self, in this case you need:
 
 If you have docker, you're done.
 
-## Build & run tests
+## Build & run tests
 
-### Manual way
+### Manual way
 
 ```bash
 mkdir build
@@ -32,7 +32,7 @@ make -j
 GTEST_COLOR=1 ./tests/test-yatp
 ```
 
-### Docker way
+### Docker way
 
 Just run this to build & run tests:
 
