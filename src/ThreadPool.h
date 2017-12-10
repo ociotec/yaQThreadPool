@@ -30,7 +30,7 @@ namespace yatp
         virtual ~ThreadPool();
 
         virtual unsigned threadsCount() const;
-        virtual ThreadPool &operator <<(IRunnable &runnable);
+        virtual ThreadPool &operator <<(const QSharedPointer<IRunnable> &runnable);
 
     private:
 

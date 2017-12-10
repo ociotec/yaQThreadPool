@@ -4,6 +4,7 @@
     @see https://github.com/ociotec/yaQThreadPool */
 
 
+#include <QDebug>
 #include <QSemaphore>
 #include <QSharedPointer>
 
@@ -99,7 +100,7 @@ namespace yatp
         EXPECT_FALSE(thread.stop());
     }
 
-    TEST_F(TestThread, AddRunnable)
+    TEST_F(TestThread, AddRunnableRunObjectsInThread)
     {
         Thread thread;
         auto runnableMock = QSharedPointer<RunnableMock>(new RunnableMock);
@@ -109,6 +110,32 @@ namespace yatp
         auto initialObjectThread = object1.thread();
         thread << runnableMock;
         EXPECT_NE(object1.thread(), initialObjectThread);
+    }
+
+    TEST_F(TestThread, LoadSumsAllRunnablesLoads)
+    {
+        Thread thread;
+        auto runnableMock1 = QSharedPointer<RunnableMock>(new RunnableMock);
+        EXPECT_CALL(*runnableMock1, objects()).Times(1)
+                .WillOnce(Return(QList<QObject *>({})));
+        EXPECT_CALL(*runnableMock1, load()).Times(2).WillRepeatedly(Return(3));
+        thread << runnableMock1;
+        EXPECT_EQ(thread.load(), 3);
+        auto runnableMock2 = QSharedPointer<RunnableMock>(new RunnableMock);
+        EXPECT_CALL(*runnableMock2, objects()).Times(1)
+                .WillOnce(Return(QList<QObject *>({})));
+        EXPECT_CALL(*runnableMock2, load()).Times(1).WillRepeatedly(Return(5));
+        thread << runnableMock2;
+        EXPECT_EQ(thread.load(), 8);
+    }
+
+    TEST_F(TestThread, DebugOperator)
+    {
+        Thread thread(123);
+        QString text;
+        QDebug debug(&text);
+        debug.noquote().nospace() << thread;
+        EXPECT_TRUE(text == "#123");
     }
 
 }

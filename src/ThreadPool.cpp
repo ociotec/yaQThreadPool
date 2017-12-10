@@ -31,7 +31,7 @@ namespace yatp
         return _threads.length();
     }
 
-    ThreadPool &ThreadPool::operator <<(IRunnable &runnable)
+    ThreadPool &ThreadPool::operator <<(const QSharedPointer<IRunnable> &runnable)
     {
         if (_threads.isEmpty())
         {
@@ -42,11 +42,13 @@ namespace yatp
             auto lessBusyThread = _threads.first();
             for (auto thread : _threads)
             {
-                if (thread->load() < lessBusyThread->load())
+                Q_ASSERT(thread);
+                if ((thread != lessBusyThread) and (thread->load() < lessBusyThread->load()))
                 {
                     lessBusyThread = thread;
                 }
             }
+            *lessBusyThread << runnable;
         }
         return *this;
     }
